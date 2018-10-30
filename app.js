@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -20,14 +22,49 @@ let port = 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cors());
+
+const apiRoutes = express.Router(); 
+
+apiRoutes.use((req, res, next) => {
+
+  const token = req.headers['authorization'] ? req.headers['authorization'].replace(/^Bearer\s/, '') : '';
+
+  if (token) {
+
+    jwt.verify(token, 'luizalabs2018', (err, decoded) => {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });       
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+
+  } else {
+
+    return res.status(403).send({ 
+      success: false, 
+      message: 'No token provided.' 
+    });
+
+  }
+
+});
+
+app.use('/api', apiRoutes);
 
 const meeting_room = require('./routes/meeting-room/meeting-room.route');
 const schedule_request = require('./routes/schedule/schedule.route');
 const metrics = require('./routes/metrics/metrics.route');
+const auth = require('./routes/authenticate/authenticate.route');
+const authSignin = require('./routes/authenticate/authenticate.route');
 
-app.use('/meeting-room', meeting_room);
-app.use('/schedule-request', schedule_request);
-app.use('/metrics', metrics);
+app.use('/api/meeting-room', meeting_room);
+app.use('/api/schedule-request', schedule_request);
+app.use('/api/metrics', metrics);
+app.use('/api/authenticate', auth);
+app.use('/authenticate-signin', authSignin);
 
 app.listen(port, () => {
   console.log('Server is up and running on port number ' + port);
