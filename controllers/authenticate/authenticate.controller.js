@@ -14,18 +14,21 @@ exports.authenticate_signup = (req, res) => {
   AuthenticateSignupSchema.find({username : userdata.username, password: userdata.password}, (err, user) => {
     
     if (user.length){
-      res.json({
-        message: 'User exists already'
+      return res.status(409).send({ 
+        success: false, 
+        message: 'User exists already' 
       });
     } else if (userdata.password === userdata.confirmpassword) {
       userdata.save((err) => {
         res.json({
+          status: 200,
           success: true,
           message: 'User: ' + userdata.username + ' registered succesfully',
         });
       });
     } else {
-      res.json({
+      res.status(500).send({
+        success: false,
         message: err
       });
     }

@@ -31,14 +31,7 @@ exports.meeting_room_details = (req, res) => {
 
 exports.meeting_room_list = (req, res) => {
 
-  Meeting.find({}, (err, meetings) => {
-    if (err) {
-      res.send('error when list all meetings room');
-      next();
-    }
-
-    res.json(meetings);
-  });
+  getMeetingsRoomByStatus(req, res);
 
 };
 
@@ -61,4 +54,15 @@ exports.meeting_room_deleteAll = (req, res) => {
     if (err) return res.send(err);
     res.send('Deleted all meetings room successfully!');
   })
+};
+
+
+function getMeetingsRoomByStatus(req, res) {
+  
+  const query  = Meeting.where({ status: req.params.status }); 
+
+  query.find((err, meetings) => {
+    if (err) return res.send(err)
+    res.json(meetings);
+  });
 };

@@ -6,6 +6,8 @@ exports.schedule_request_create = (req, res) => {
       title: req.body.title,
       roomId: req.body.roomId,
       scheduleTime: req.body.scheduleTime,
+      scheduleHourInit: req.body.scheduleHourInit,
+      scheduleHourEnd: req.body.scheduleHourEnd,
       userEmail: req.body.userEmail,
       department: req.body.department,
       status: req.body.status
@@ -24,6 +26,12 @@ exports.schedule_request_create = (req, res) => {
 exports.schedule_request_filterByDateAndRoom = (req, res) => {
 
   getScheduleByDateAndRoom(req, res);
+
+};
+
+exports.schedule_request_schedules = (req, res) => {
+
+  getSchedules(req, res);
 
 };
 
@@ -57,14 +65,33 @@ exports.schedule_request_deleteAll = (req, res) => {
   })
 };
 
-
 // - Functions
 function getScheduleByDateAndRoom(req, res) {
   
   const query  = Schedule.where({ roomId: req.params.roomId, scheduleTime: req.params.date }); 
 
-  query.findOne((err, schedule) => {
+  query.find((err, schedule) => {
     if (err) return res.send(err)
     res.json(schedule);
   });
 };
+
+function getSchedules(req, res) {
+
+  const scheduleModel = [
+    '_id',
+    'title',
+    'roomId',
+    'scheduleTime',
+    'scheduleHourInit',
+    'scheduleHourEnd',
+    'userEmail',
+    'department',
+    'status'
+  ];
+
+  Schedule.find({}, scheduleModel, (error, schedules) => {
+    res.json(schedules);
+  });
+
+}

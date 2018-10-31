@@ -5,7 +5,7 @@ const MeetingRoomSchema = new Schema({
   name: { type: String, required: true, max: 100 },
   capacity: { type: Number, required: true },
   datashow: { type: Boolean, required: false },
-  status: { type: String, required: false },
+  status: { type: String, required: true },
   description: { type: String, required: false }
 });
 

@@ -5,7 +5,7 @@ const meeting_room_controller = require('../../controllers/meeting-room/meeting-
 
 router.get('/:id', meeting_room_controller.meeting_room_details);
 
-router.get('/list', meeting_room_controller.meeting_room_list);
+router.get('/list/:status', meeting_room_controller.meeting_room_list);
 
 router.post('/create', meeting_room_controller.meeting_room_create);
 
