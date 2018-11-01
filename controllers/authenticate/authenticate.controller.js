@@ -74,3 +74,24 @@ exports.authenticate_signin = (req, res) => {
 
 }
 
+exports.authenticate_change_password = (req, res) => {
+  
+  getUserId(req,res);
+
+};
+
+function getUserId(req, res) {
+  
+  const query  = AuthenticateSignupSchema.where({ username: req.params.username }); 
+
+  query.find((err, user) => {
+    if (err) return res.status(500).send(err)
+
+    AuthenticateSignupSchema.findByIdAndUpdate(user[0]._id, {$set: req.body}, {new: true}, (err, user) => {
+      if (err) return res.send(err);
+      res.status(200).send('Change password request udpated.');
+    });
+
+  });
+
+};
