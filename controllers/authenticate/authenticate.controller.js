@@ -7,6 +7,7 @@ exports.authenticate_signup = (req, res) => {
     {
       username: req.body.username,
       password: req.body.password,
+      name: req.body.name,
       confirmpassword: req.body.confirmpassword
     }
   );
@@ -89,7 +90,10 @@ function getUserId(req, res) {
 
     AuthenticateSignupSchema.findByIdAndUpdate(user[0]._id, {$set: req.body}, {new: true}, (err, user) => {
       if (err) return res.send(err);
-      res.status(200).send('Change password request udpated.');
+      return res.json({
+        success: true,
+        message: 'Change password request udpated.',
+      });
     });
 
   });
