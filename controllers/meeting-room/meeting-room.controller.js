@@ -56,6 +56,12 @@ exports.meeting_room_deleteAll = (req, res) => {
   })
 };
 
+exports.meeting_room_meetings = (req, res) => {
+
+  getMeetings(req, res);
+
+};
+
 
 function getMeetingsRoomByStatus(req, res) {
   
@@ -66,3 +72,20 @@ function getMeetingsRoomByStatus(req, res) {
     res.json(meetings);
   });
 };
+
+function getMeetings(req, res) {
+
+  const meetingModel = [
+    '_id',
+    'name',
+    'capacity',
+    'datashow',
+    'status',
+    'description'
+  ];
+
+  Meeting.find({}, meetingModel, (error, meetings) => {
+    res.json(meetings);
+  });
+
+}
