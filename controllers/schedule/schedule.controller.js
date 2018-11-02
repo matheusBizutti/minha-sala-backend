@@ -13,12 +13,24 @@ exports.schedule_request_create = (req, res) => {
       status: req.body.status
     }
   );
+                    
+  Schedule.find({ roomId: req.body.roomId, scheduleTime: req.body.scheduleTime, 
+                  scheduleHourInit: req.body.scheduleHourInit, 
+                  scheduleHourEnd: req.body.scheduleHourEnd }, (err, schedule) => {
 
-  schedule_request.save((err) => {
-    if (err) {
-      res.send(err);
+    if (schedule.length){
+      return res.status(409).send({ 
+        success: false, 
+        message: 'Schedule exists already' 
+      });
+    } else {
+      schedule_request.save((err) => {
+        if (err) {
+          res.send(err);
+        }
+        res.send('Schedule request: ' + schedule_request.title + ' created successfully');
+      });
     }
-    res.send('Schedule request: ' + schedule_request.title + ' created successfully');
   });
   
 };
