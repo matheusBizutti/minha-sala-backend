@@ -28,3 +28,26 @@ exports.metrics_details = (req, res) => {
   });
 
 };
+
+exports.metrics_list = (req, res) => {
+
+  getMetrics(req, res);
+
+};
+
+function getMetrics(req, res) {
+
+  const metricsModel = [
+    'name',
+    'api',
+    'httpStatusCode',
+    'date',
+    'user'
+  ];
+
+  
+  Metrics.find({}, metricsModel, (error, metrics) => {
+    res.json(metrics);
+  });
+
+}
